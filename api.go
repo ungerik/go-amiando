@@ -1,15 +1,18 @@
 package amiando
 
 import (
-	"os"
+	"encoding/json"
 	"fmt"
-	"http"
-	"json"
-	"strings"
 	"io/ioutil"
+	"net/http"
+	"strings"
+	//	"gostart/utils"
+	"gostart/debug"
 )
 
-// See: http://developers.amiando.com/
+func init() {
+	debug.Nop()
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // Api
@@ -23,7 +26,7 @@ type Api struct {
 	http http.Client
 }
 
-func (self *Api) httpGet(url string) (body []byte, err os.Error) {
+func (self *Api) httpGet(url string) (body []byte, err error) {
 	response, err := self.http.Get(url)
 	if err != nil {
 		return nil, err
@@ -32,9 +35,9 @@ func (self *Api) httpGet(url string) (body []byte, err os.Error) {
 	return ioutil.ReadAll(response.Body)
 }
 
-func (self *Api) Call(resourceFormat string, resourceArg interface{}, result ErrorReporter) (err os.Error) {
+func (self *Api) Call(resourceFormat string, resourceArg interface{}, result ErrorReporter) (err error) {
 	result.Reset()
-	
+
 	sep := "?"
 	if strings.Contains(resourceFormat, "?") {
 		sep = "&"
@@ -54,7 +57,7 @@ func (self *Api) Call(resourceFormat string, resourceArg interface{}, result Err
 	return result.Error()
 }
 
-func (self *Api) Payment(id ID, out interface{}) (err os.Error) {
+func (self *Api) Payment(id ID, out interface{}) (err error) {
 	type Result struct {
 		ResultBase
 		Payment interface{} `json:"payment"`
@@ -63,7 +66,7 @@ func (self *Api) Payment(id ID, out interface{}) (err os.Error) {
 	return self.Call("payment/%v", id, &result)
 }
 
-func (self *Api) TicketIDsOfPayment(paymentID ID) (ids []ID, err os.Error) {
+func (self *Api) TicketIDsOfPayment(paymentID ID) (ids []ID, err error) {
 	type Result struct {
 		ResultBase
 		Tickets []ID `json:"tickets"`
@@ -76,16 +79,17 @@ func (self *Api) TicketIDsOfPayment(paymentID ID) (ids []ID, err os.Error) {
 	return result.Tickets, nil
 }
 
-func (self *Api) Ticket(id ID, out interface{}) (err os.Error) {
+func (self *Api) Ticket(id ID, out interface{}) (err error) {
 	type Result struct {
 		ResultBase
 		Ticket interface{} `json:"ticket"`
 	}
-	result := Result{Ticket: out}
-	return self.Call("ticket/%v", id, &result)
+	//result := Result{Ticket: out}
+	//return self.Call("ticket/%v", id, &result)
+	return nil
 }
 
-func (self *Api) User(id ID, out interface{}) (err os.Error) {
+func (self *Api) User(id ID, out interface{}) (err error) {
 	type Result struct {
 		ResultBase
 		User interface{} `json:"user"`

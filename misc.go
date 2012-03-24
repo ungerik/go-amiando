@@ -1,11 +1,10 @@
 package amiando
 
 import (
-	"os"
-	"json"
 	"bytes"
-	"strings"
+	"encoding/json"
 	"strconv"
+	"strings"
 )
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -14,7 +13,7 @@ import (
 type ID int64
 
 func (self ID) String() string {
-	return strconv.Itoa64(int64(self))
+	return strconv.FormatInt(int64(self), 10)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -24,7 +23,7 @@ type Error struct {
 	errors []string
 }
 
-func (self *Error) String() string {
+func (self *Error) Error() string {
 	return strings.Join(self.errors, ", ")
 }
 
@@ -32,7 +31,7 @@ func (self *Error) String() string {
 // ErrorReporter
 
 type ErrorReporter interface {
-	Error() os.Error
+	Error() error
 	Reset()
 }
 
@@ -44,8 +43,8 @@ type ResultBase struct {
 	Errors  []string `json:"errors"`
 }
 
-func (self *ResultBase) Error() (err os.Error) {
-	if self.Success {
+func (self *ResultBase) Error() (err error) {
+	if self.Success || len(self.Errors) == 0 {
 		return nil
 	}
 	return &Error{self.Errors}
@@ -65,8 +64,8 @@ type JsonResult struct {
 	JSON []byte
 }
 
-func (self *JsonResult) UnmarshalJSON(jsonData []byte) os.Error {
-	self.JSON = jsonData	
+func (self *JsonResult) UnmarshalJSON(jsonData []byte) error {
+	self.JSON = jsonData
 	return json.Unmarshal(jsonData, &self.ResultBase)
 }
 
@@ -76,7 +75,7 @@ func (self *JsonResult) String() string {
 
 func (self *JsonResult) Reset() {
 	self.ResultBase.Reset()
-	self.JSON = nil	
+	self.JSON = nil
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -86,7 +85,7 @@ func PrettifyJSON(compactJSON []byte) string {
 	var buf bytes.Buffer
 	err := json.Indent(&buf, compactJSON, "", "\t")
 	if err != nil {
-		return err.String()
+		return err.Error()
 	}
 	return buf.String()
 }

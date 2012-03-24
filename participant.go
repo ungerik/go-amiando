@@ -1,9 +1,6 @@
 package amiando
 
-import (
-	"os"
-	"fmt"
-)
+import "fmt"
 
 type Participant struct {
 	Event *Event
@@ -44,7 +41,7 @@ func (self *Participant) FindUserData(title string, restrictToTypes ...UserDataT
 	return nil, false
 }
 
-func (self *Participant) FindRequiredUserData(title string, restrictToTypes ...UserDataType) (userData *UserData, err os.Error) {
+func (self *Participant) FindRequiredUserData(title string, restrictToTypes ...UserDataType) (userData *UserData, err error) {
 	userData, found := self.FindUserData(title, restrictToTypes...)
 	if !found {
 		return nil, fmt.Errorf("Required UserData \"%s\" of participant \"%s %s\"<%s> not found", title, self.FirstName, self.LastName, self.Email)

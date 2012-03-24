@@ -1,10 +1,8 @@
 package amiando
 
-import (
-	"os"
-	"fmt"
-	//	"gostart/debug"
-)
+import "fmt"
+
+//	"gostart/debug"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Event
@@ -44,7 +42,7 @@ type Event struct {
 	InternalID     ID
 }
 
-func NewEvent(api *Api, identifier string) (event *Event, err os.Error) {
+func NewEvent(api *Api, identifier string) (event *Event, err error) {
 	event = &Event{
 		Api:        api,
 		Identifier: identifier,
@@ -92,11 +90,11 @@ func NewEvent(api *Api, identifier string) (event *Event, err os.Error) {
 	return event, nil
 }
 
-func (self *Event) Read(out ErrorReporter) (err os.Error) {
+func (self *Event) Read(out ErrorReporter) (err error) {
 	return self.Api.Call("event/%v", self.InternalID, out)
 }
 
-func (self *Event) PaymentIDs() (ids []ID, err os.Error) {
+func (self *Event) PaymentIDs() (ids []ID, err error) {
 	type Result struct {
 		ResultBase
 		Payments []ID `json:"payments"`
@@ -109,7 +107,7 @@ func (self *Event) PaymentIDs() (ids []ID, err os.Error) {
 	return result.Payments, nil
 }
 
-func (self *Event) TicketIDs() (ids []ID, err os.Error) {
+func (self *Event) TicketIDs() (ids []ID, err error) {
 	type Result struct {
 		ResultBase
 		Ids []ID `json:"ids"`
@@ -122,8 +120,8 @@ func (self *Event) TicketIDs() (ids []ID, err os.Error) {
 	return result.Ids, nil
 }
 
-func (self *Event) Participants() (participants []*Participant, err os.Error) {
-	participants = make([]*Participant, 0, 64)
+func (self *Event) Participants() (participants []*Participant, err error) {
+	participants = []*Participant{}
 
 	paymentIDs, err := self.PaymentIDs()
 	if err != nil {
@@ -168,9 +166,9 @@ func (self *Event) Participants() (participants []*Participant, err os.Error) {
 	return participants, nil
 }
 
-func (self *Event) EnumParticipants() (<-chan *Participant, <-chan os.Error) {
+func (self *Event) EnumParticipants() (<-chan *Participant, <-chan error) {
 	p := make(chan *Participant, 32)
-	e := make(chan os.Error, 1)
+	e := make(chan error, 1)
 
 	go func() {
 		defer close(p)
