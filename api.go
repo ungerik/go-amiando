@@ -6,13 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
-	//	"gostart/utils"
-	"gostart/debug"
 )
-
-func init() {
-	debug.Nop()
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 // Api
