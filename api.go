@@ -78,9 +78,8 @@ func (self *Api) Ticket(id ID, out interface{}) (err error) {
 		ResultBase
 		Ticket interface{} `json:"ticket"`
 	}
-	//result := Result{Ticket: out}
-	//return self.Call("ticket/%v", id, &result)
-	return nil
+	result := Result{Ticket: out}
+	return self.Call("ticket/%v", id, &result)
 }
 
 func (self *Api) User(id ID, out interface{}) (err error) {
