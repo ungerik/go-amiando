@@ -37,8 +37,9 @@ func (self *Api) Call(resourceFormat string, resourceArg interface{}, result Err
 		sep = "&"
 	}
 	resourceFormat = "http://www.amiando.com/api/" + resourceFormat + sep + "apikey=%s&version=1&format=json"
+	url := fmt.Sprintf(resourceFormat, resourceArg, self.Key)
 
-	j, err := self.httpGet(fmt.Sprintf(resourceFormat, resourceArg, self.Key))
+	j, err := self.httpGet(url)
 	if err != nil {
 		return err
 	}
@@ -48,7 +49,7 @@ func (self *Api) Call(resourceFormat string, resourceArg interface{}, result Err
 		return err
 	}
 
-	return result.Error()
+	return result.Err()
 }
 
 func (self *Api) Payment(id ID, out interface{}) (err error) {

@@ -64,14 +64,14 @@ func NewEvent(api *Api, identifier string) (event *Event, err error) {
 	for _, id := range result.Ids {
 		type Result struct {
 			ResultBase
-			BasicEventData `json:"event"`
+			Event BasicEventData `json:"event"`
 		}
 		var result Result
 		err = event.Api.Call("event/%v", id, &result)
 		if err != nil {
 			return nil, err
 		}
-		if result.Identifier == identifier {
+		if result.Event.Identifier == identifier {
 			event.InternalID = id
 			break
 		}

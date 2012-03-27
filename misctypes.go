@@ -1,7 +1,6 @@
 package amiando
 
 import (
-	"bytes"
 	"encoding/json"
 	"strconv"
 	"strings"
@@ -31,7 +30,7 @@ func (self *Error) Error() string {
 // ErrorReporter
 
 type ErrorReporter interface {
-	Error() error
+	Err() error
 	Reset()
 }
 
@@ -43,7 +42,7 @@ type ResultBase struct {
 	Errors  []string `json:"errors"`
 }
 
-func (self *ResultBase) Error() (err error) {
+func (self *ResultBase) Err() (err error) {
 	if self.Success || len(self.Errors) == 0 {
 		return nil
 	}
@@ -76,16 +75,4 @@ func (self *JsonResult) String() string {
 func (self *JsonResult) Reset() {
 	self.ResultBase.Reset()
 	self.JSON = nil
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// Functions
-
-func PrettifyJSON(compactJSON []byte) string {
-	var buf bytes.Buffer
-	err := json.Indent(&buf, compactJSON, "", "\t")
-	if err != nil {
-		return err.Error()
-	}
-	return buf.String()
 }
