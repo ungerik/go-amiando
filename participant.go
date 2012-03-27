@@ -3,9 +3,9 @@ package amiando
 import "fmt"
 
 type Participant struct {
-	Event *Event
+	Event *Event `json:"-"`
 
-	PaymentID     ID
+	PaymentID     ID            `json:"-"`
 	PaymentUserID ID            `json:"buyerId"`      // payment
 	PaymentStatus PaymentStatus `json:"status"`       // payment
 	InvoiceNumber string        `json:"identifier"`   // payment
@@ -13,7 +13,7 @@ type Participant struct {
 	CreatedDate   string        `json:"creationTime"` // payment
 	ModifiedDate  string        `json:"lastModified"` // payment
 
-	TicketID           ID
+	TicketID           ID         `json:"-"`
 	FirstName          string     `json:"firstName"`         // ticket
 	LastName           string     `json:"lastName"`          // ticket
 	Email              string     `json:"email"`             // ticket
