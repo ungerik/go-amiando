@@ -34,10 +34,10 @@ type BasicEventData struct {
 
 type Event struct {
 	ResultBase
-	BasicEventData `json:"event"`
-	Api            *Api
-	Identifier     string
-	InternalID     ID
+	Event      BasicEventData `json:"event"`
+	Api        *Api           `json:"-"`
+	Identifier string         `json:"-"`
+	InternalID ID             `json:"-"`
 }
 
 func NewEvent(api *Api, identifier string) (event *Event, err error) {
