@@ -152,15 +152,11 @@ func (self *Event) EnumParticipants() (<-chan *Participant, <-chan error) {
 					return
 				}
 
-				// Delete payment user data because we are only
-				// interested in the the ticket user data.
-				// In fact payment user data showed to be garbage
-				// that can conflict with the ticket user data
-				// when unmarshalling JSON
-				participant.UserData = nil
-
 				// Save payment UserData because it will be overwritten by the ticket UserData 
 				userData := participant.UserData
+				// Delete payment user data to avoid conflicts
+				// with ticket user-data
+				participant.UserData = nil
 
 				err = self.Api.Ticket(ticketID, participant)
 				if err != nil {

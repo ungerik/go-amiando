@@ -19,9 +19,10 @@ type Participant struct {
 	PaymentUserID ID            `json:"buyerId"`      // payment
 	PaymentStatus PaymentStatus `json:"status"`       // payment
 	InvoiceNumber string        `json:"identifier"`   // payment
-	UserData      []UserData    `json:"userData"`     // payment
 	CreatedDate   string        `json:"creationTime"` // payment
 	ModifiedDate  string        `json:"lastModified"` // payment
+
+	UserData []UserData `json:"userData"` // payment & ticket
 
 	TicketID           ID         `json:"-"`
 	FirstName          string     `json:"firstName"`         // ticket
