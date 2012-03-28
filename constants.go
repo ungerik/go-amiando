@@ -2,8 +2,6 @@ package amiando
 
 const DateFormat = "2006-01-02T15:04:05"
 
-type PaymentStatus string
-
 const (
 	PaymentNew        PaymentStatus = "new"
 	PaymentAuthorized PaymentStatus = "authorized"
@@ -11,8 +9,6 @@ const (
 	PaymentDisbursed  PaymentStatus = "disbursed"
 	PaymentCancelled  PaymentStatus = "cancelled"
 )
-
-type UserDataType string
 
 const (
 	UserDataString      UserDataType = "string"   // value is of type String.
@@ -32,12 +28,6 @@ const (
 	UserDataDropdown    UserDataType = "dropdown" // value is of type String.
 	UserDataTextArea    UserDataType = "textarea" // value is of type String.
 )
-
-type TicketType string
-
-func (self TicketType) String() string {
-	return string(self)
-}
 
 const (
 	BadgeTicket        TicketType = "com.amiando.ticket.type.Badge"        // Means that the ticket is a badge.

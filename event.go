@@ -34,7 +34,7 @@ type BasicEventData struct {
 
 type Event struct {
 	ResultBase
-	Event      BasicEventData `json:"event"`
+	Data       BasicEventData `json:"event"`
 	Api        *Api           `json:"-"`
 	Identifier string         `json:"-"`
 	InternalID ID             `json:"-"`

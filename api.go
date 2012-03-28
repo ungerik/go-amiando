@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
+	"runtime/debug"
 	"strings"
 )
 
@@ -68,6 +70,16 @@ func (self *Api) Call_debug(resourceFormat string, resourceArg interface{}, resu
 		return err
 	}
 	fmt.Println("Result:\n", PrettifyJSON(j))
+
+	// Catch dubios bug in json.Unmarshal
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("%v", r)
+			fmt.Println(err)
+			debug.PrintStack()
+			os.Exit(-1)
+		}
+	}()
 
 	err = json.Unmarshal(j, result)
 	if err != nil {

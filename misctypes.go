@@ -6,6 +6,10 @@ import (
 	"strings"
 )
 
+type PaymentStatus string
+type UserDataType string
+type TicketType string
+
 ///////////////////////////////////////////////////////////////////////////////
 // ID
 
@@ -42,7 +46,7 @@ type ResultBase struct {
 	Errors  []string `json:"errors"`
 }
 
-func (self *ResultBase) Err() (err error) {
+func (self *ResultBase) Err() error {
 	if self.Success || len(self.Errors) == 0 {
 		return nil
 	}
