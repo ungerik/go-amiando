@@ -71,7 +71,7 @@ func (self *Api) Call_debug(resourceFormat string, resourceArg interface{}, resu
 	}
 	fmt.Println("Result:\n", PrettifyJSON(j))
 
-	// Catch dubios bug in json.Unmarshal
+	// Catch nasty problems in json.Unmarshal
 	defer func() {
 		if r := recover(); r != nil {
 			err = fmt.Errorf("%v", r)
@@ -118,7 +118,7 @@ func (self *Api) Ticket(id ID, out interface{}) (err error) {
 		Ticket interface{} `json:"ticket"`
 	}
 	result := Result{Ticket: out}
-	return self.Call_debug("ticket/%v", id, &result)
+	return self.Call("ticket/%v", id, &result)
 }
 
 func (self *Api) User(id ID, out interface{}) (err error) {

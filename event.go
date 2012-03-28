@@ -118,52 +118,6 @@ func (self *Event) TicketIDs() (ids []ID, err error) {
 	return result.Ids, nil
 }
 
-func (self *Event) Participants() (participants []*Participant, err error) {
-	participants = []*Participant{}
-
-	paymentIDs, err := self.PaymentIDs()
-	if err != nil {
-		return nil, err
-	}
-
-	for _, paymentID := range paymentIDs {
-		ticketIDs, err := self.Api.TicketIDsOfPayment(paymentID)
-		if err != nil {
-			return nil, err
-		}
-
-		for i, ticketID := range ticketIDs {
-			participant := &Participant{
-				Event:     self,
-				PaymentID: paymentID,
-				TicketID:  ticketID,
-			}
-
-			err = self.Api.Payment(paymentID, participant)
-			if err != nil {
-				return nil, err
-			}
-
-			// Save payment UserData because it will be overwritten by the ticket UserData 
-			userData := participant.UserData
-
-			err = self.Api.Ticket(ticketID, participant)
-			if err != nil {
-				return nil, err
-			}
-
-			// If there is no ticket UserData use payment UserData for the first ticket
-			if i == 0 && len(participant.UserData) == 0 {
-				participant.UserData = userData
-			}
-
-			participants = append(participants, participant)
-		}
-	}
-
-	return participants, nil
-}
-
 func (self *Event) EnumParticipants() (<-chan *Participant, <-chan error) {
 	p := make(chan *Participant, 32)
 	e := make(chan error, 1)
@@ -177,6 +131,7 @@ func (self *Event) EnumParticipants() (<-chan *Participant, <-chan error) {
 			e <- err
 			return
 		}
+
 		for _, paymentID := range paymentIDs {
 			ticketIDs, err := self.Api.TicketIDsOfPayment(paymentID)
 			if err != nil {
@@ -196,6 +151,13 @@ func (self *Event) EnumParticipants() (<-chan *Participant, <-chan error) {
 					e <- err
 					return
 				}
+
+				// Delete payment user data because we are only
+				// interested in the the ticket user data.
+				// In fact payment user data showed to be garbage
+				// that can conflict with the ticket user data
+				// when unmarshalling JSON
+				participant.UserData = nil
 
 				// Save payment UserData because it will be overwritten by the ticket UserData 
 				userData := participant.UserData

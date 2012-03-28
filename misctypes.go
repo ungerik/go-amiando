@@ -57,26 +57,3 @@ func (self *ResultBase) Reset() {
 	self.Success = false
 	self.Errors = nil
 }
-
-///////////////////////////////////////////////////////////////////////////////
-// JsonResult
-
-// Has to be used as a pointer to member of a struct
-type JsonResult struct {
-	ResultBase
-	JSON []byte
-}
-
-func (self *JsonResult) UnmarshalJSON(jsonData []byte) error {
-	self.JSON = jsonData
-	return json.Unmarshal(jsonData, &self.ResultBase)
-}
-
-func (self *JsonResult) String() string {
-	return PrettifyJSON(self.JSON)
-}
-
-func (self *JsonResult) Reset() {
-	self.ResultBase.Reset()
-	self.JSON = nil
-}
