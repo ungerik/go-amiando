@@ -44,8 +44,8 @@ func (self *UserData) Address() *Address {
 	if v, ok := data["street"]; ok {
 		addr.Street = v.(string)
 	}
-	if v, ok := data["streets"]; ok {
-		addr.Streets = v.(string)
+	if v, ok := data["street2"]; ok {
+		addr.Street2 = v.(string)
 	}
 	if v, ok := data["city"]; ok {
 		addr.City = v.(string)
