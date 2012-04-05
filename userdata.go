@@ -21,6 +21,8 @@ const (
 	UserDataRadiobutton UserDataType = "radio"    // value is of type String.
 	UserDataDropdown    UserDataType = "dropdown" // value is of type String.
 	UserDataTextArea    UserDataType = "textarea" // value is of type String.
+	UserDataProduct     UserDataType = "product"  // value is of type String.
+	UserDataPhoto       UserDataType = "photo"    // value is of type String (URL)
 )
 
 type UserData struct {
@@ -42,6 +44,9 @@ func (self *UserData) Address() *Address {
 	if v, ok := data["street"]; ok {
 		addr.Street = v.(string)
 	}
+	if v, ok := data["streets"]; ok {
+		addr.Streets = v.(string)
+	}
 	if v, ok := data["city"]; ok {
 		addr.City = v.(string)
 	}
@@ -56,6 +61,7 @@ func (self *UserData) Address() *Address {
 
 type Address struct {
 	Street  string
+	Street2 string
 	City    string
 	ZipCode string
 	Country string
