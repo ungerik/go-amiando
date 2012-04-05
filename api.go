@@ -105,7 +105,7 @@ func (self *Api) TicketIDsOfPayment(paymentID ID) (ids []ID, err error) {
 		Tickets []ID `json:"tickets"`
 	}
 	var result Result
-	err = self.Call("payment/%v/tickets", paymentID, &result)
+	err = self.Call_debug("payment/%v/tickets", paymentID, &result)
 	if err != nil {
 		return nil, err
 	}
@@ -118,7 +118,7 @@ func (self *Api) Ticket(id ID, out interface{}) (err error) {
 		Ticket interface{} `json:"ticket"`
 	}
 	result := Result{Ticket: out}
-	return self.Call("ticket/%v", id, &result)
+	return self.Call_debug("ticket/%v", id, &result)
 }
 
 func (self *Api) User(id ID, out interface{}) (err error) {
